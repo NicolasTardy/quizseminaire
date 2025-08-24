@@ -1,0 +1,8 @@
+/* Style global pour l'arrière-plan */
+body {
+  background-color: #120c1c;
+  background-image: 
+    radial-gradient(circle at 25% 25%, #2c1e4a 0%, #120c1c 40%),
+    radial-gradient(circle at 75% 75%, #2c1e4a 0%, #120c1c 40%);
+  background-size: 100% 100%;
+}
