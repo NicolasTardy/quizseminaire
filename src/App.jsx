@@ -5,12 +5,12 @@ import { getFirestore, collection, doc, setDoc, onSnapshot, getDocs, query, wher
 // --- Configuration Firebase ---
 // IMPORTANT : Assurez-vous que votre configuration Firebase est bien ici.
 const firebaseConfig = {
-  apiKey: "AIzaSyCqp6IUYYH3BRRK0UJSQv5-nl7UWEa0ZJ4",
-  authDomain: "quizz-ce8bb.firebaseapp.com",
-  projectId: "quizz-ce8bb",
-  storageBucket: "quizz-ce8bb.firebasestorage.app",
-  messagingSenderId: "591107427632",
-  appId: "1:591107427632:web:1c2b2ade52788234b18cf5"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID
 };
 
 // --- Initialisation de Firebase ---
@@ -19,7 +19,10 @@ const db = getFirestore(app);
 
 // --- Données du Quiz ---
 const QUIZ_QUESTIONS = [
-    { question: "Question 1", options: ["Réponse A", "Réponse B", "Réponse C", "Réponse D"], correct: "Réponse C", image: "https://placehold.co/600x400/120c1c/ffc600?text=Image+Q1" },
+    // La première question utilise maintenant votre image
+    { question: "Question 1", options: ["Réponse A", "Réponse B", "Réponse C", "Réponse D"], correct: "Réponse C", image: "/image/1000005159.jpg" },
+    
+    // Les autres questions utilisent toujours les images de remplacement
     { question: "Question 2", options: ["Réponse A", "Réponse B", "Réponse C", "Réponse D"], correct: "Réponse A", image: "https://placehold.co/600x400/120c1c/ffc600?text=Image+Q2" },
     { question: "Question 3", options: ["Réponse A", "Réponse B", "Réponse C", "Réponse D"], correct: "Réponse B", image: "https://placehold.co/600x400/120c1c/ffc600?text=Image+Q3" },
     { question: "Question 4", options: ["Réponse A", "Réponse B", "Réponse C", "Réponse D"], correct: "Réponse D", image: "https://placehold.co/600x400/120c1c/ffc600?text=Image+Q4" },
