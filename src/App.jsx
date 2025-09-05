@@ -33,7 +33,7 @@ const QUIZ_QUESTIONS = [
     question: "Quel est le meilleur moyen de convaincre un chat de s’abonner à un service ?",
     options: [
       "Lui envoyer un e-mail personnalisé",
-      "Lui offrir une boîte vide",
+      "Lui offrir, une boîte vide (c'est la bonne réponse)",
       "Lui promettre des croquettes premium",
       "Lui montrer une vidéo de souris en 4K"
     ],
@@ -378,29 +378,49 @@ export default function App() {
 }
 
 // --- Composants d'UI ---
-
 const LoginPanel = ({ onLogin }) => {
   const [pseudo, setPseudo] = useState('');
-  const handleSubmit = (e) => { e.preventDefault(); onLogin(pseudo); };
+  const handleSubmit = (e) => { 
+    e.preventDefault(); 
+    onLogin(pseudo); 
+  };
+
   return (
     <>
-      <video autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-20">
+      {/* Vidéo de fond */}
+      <video 
+        autoPlay 
+        loop 
+        muted 
+        playsInline
+        className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-20"
+      >
         <source src="/assets/intro-video.mp4" type="video/mp4" />
       </video>
-      <div className="relative z-10 w-full max-w-2xl mx-auto bg-brand-purple/50 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-brand-light-purple/50 text-center animate-fade-in-up">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-center mb-3 text-white">Quiz<span className="text-brand-yellow">Show</span></h1>
-        <p className="text-center text-gray-300 mb-10 text-lg">Préparez-vous à tester vos connaissances !</p>
+
+      {/* Conteneur login */}
+      <div className="relative z-10 w-full max-w-md mx-auto bg-brand-purple/60 backdrop-blur-lg rounded-2xl shadow-2xl p-6 border border-brand-light-purple/50 text-center animate-fade-in-up">
+        <h1 className="text-4xl font-extrabold text-white mb-3">
+          QuizTeam<span className="text-brand-yellow">ServicesShow</span>
+        </h1>
+        <p className="text-gray-300 mb-6 text-lg">
+          La Team Services, préparez-vous à tester vos connaissances !
+        </p>
+
         <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
           <input
             type="text"
             value={pseudo}
             onChange={(e) => setPseudo(e.target.value)}
             placeholder="Entrez votre pseudo"
-            className="w-full max-w-sm p-4 bg-brand-dark/70 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-pink transition-all text-center text-xl font-semibold"
+            className="w-56 p-2 bg-brand-dark/70 rounded-lg text-white placeholder-gray-400 
+                       focus:outline-none focus:ring-2 focus:ring-brand-pink transition-all 
+                       text-center text-base font-medium"
           />
           <button
             type="submit"
-            className="w-full max-w-sm bg-brand-pink hover:bg-opacity-80 text-white font-bold py-4 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg text-xl"
+            className="w-56 bg-brand-pink hover:bg-opacity-80 text-white font-bold py-2 px-4 
+                       rounded-lg transition-transform transform hover:scale-105 shadow-lg text-lg"
           >
             Rejoindre la partie
           </button>
@@ -428,7 +448,7 @@ const QuizPanel = ({ question, onAnswer, timer, selectedAnswer, questionNumber, 
         </div>
       </div>
       <div className="my-6 h-48 md:h-64 flex justify-center items-center bg-brand-dark rounded-lg overflow-hidden">
-        <img src={question.image} alt="Illustration" className="w-full h-full object-cover" />
+        <img src={question.image} alt="Illustration" className="w-full h-full object-contain" />
       </div>
       <p className="text-2xl lg:text-3xl text-center font-bold mb-8 min-h-[6rem] flex items-center justify-center">
         {question.question}
@@ -459,7 +479,7 @@ const AnswerPanel = ({ question }) => (
 
 const WaitingRoom = ({ participants, message }) => (
   <div className="w-full max-w-3xl mx-auto bg-brand-purple/60 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-brand-light-purple/50 text-center animate-fade-in-up">
-    <h2 className="text-3xl font-bold mb-4 text-white">{message || "Salle d'attente"}</h2>
+    <h2 className="text-3xl font-bold mb-4 text-white">{message || "Salle d'attente de la Team Services..."}</h2>
     <div className="flex items-center justify-center gap-3 mb-6 text-xl text-gray-300">
       <svg className="animate-spin h-6 w-6 text-brand-teal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -524,14 +544,28 @@ const ResultsPanel = ({ participants }) => {
           </div>
         )}
       </div>
-      <h3 className="text-2xl font-bold pt-4">Classement Général</h3>
+      
+      {/* Nouvelle section pour le classement complet */}
+      <h3 className="text-2xl font-bold pt-6 text-brand-teal">Classement Complet</h3>
       <ol className="text-left space-y-2">
-        {sorted.slice(1, 5).map((p, index) => (
-          <li key={p.id} className="bg-brand-light-purple/50 p-3 rounded-lg flex justify-between items-center text-lg">
-            <span><strong className="text-gray-400 font-bold mr-3">{index + 2}.</strong>{p.pseudo}</span>
-            <span className="font-bold text-brand-yellow">{p.score} pts</span>
-          </li>
-        ))}
+        {sorted.map((p, index) => {
+          const isTop5 = index < 5;
+          const liClasses = `p-3 rounded-lg flex justify-between items-center text-lg transition-all duration-300 ease-in-out ${isTop5 ? 'animate-highlight-score bg-brand-yellow/30' : 'bg-brand-light-purple/50'}`;
+          const rankColor = isTop5 ? 'text-brand-yellow' : 'text-gray-400';
+          const scoreColor = isTop5 ? 'text-white font-extrabold' : 'text-brand-yellow';
+
+          return (
+            <li key={p.id} className={liClasses} style={{ animationDelay: `${isTop5 ? index * 0.15 : 0}s` }}>
+              <span>
+                <strong className={`font-bold mr-3 ${rankColor}`}>{index + 1}.</strong>
+                {p.pseudo}
+              </span>
+              <span className={`font-bold ${scoreColor}`}>
+                {p.score} pts
+              </span>
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
@@ -539,7 +573,7 @@ const ResultsPanel = ({ participants }) => {
 
 const AdminPanel = ({ onStart, onShowResults, onReset, participants, gameState }) => (
   <div className="w-full max-w-3xl mx-auto bg-brand-purple/60 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-brand-light-purple/50 text-center animate-fade-in-up">
-    <h2 className="text-3xl font-bold mb-6 text-brand-teal">Panneau Administrateur</h2>
+    <h2 className="text-3xl font-bold mb-6 text-brand-teal">hello</h2>
     <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
       {gameState.view !== 'quiz' && gameState.view !== 'finished' && gameState.view !== 'answer' && (
         <button onClick={onStart} className="bg-brand-teal hover:opacity-80 text-brand-dark font-bold py-4 px-8 text-xl rounded-lg shadow-lg transition-transform transform hover:scale-105">
